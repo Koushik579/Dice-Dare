@@ -495,7 +495,7 @@ export const finalChallenges = [
   {
     id: "final-099",
     title: "Prone Bone to Bare Ass Spatter",
-    text: "Pin your partner flat on their stomach and pound from behind until the point of no return; yank your dick out at the last second, deliver two hard slaps to their bare ass cheeks, and pump your shaft to coat their red ass cheeks, crack, and butt hole in hot, thick cum.",
+    text: "Pin your partner flat on their stomach and pound from behind until the point of no return; yank your dick out few seconds before, deliver two hard slaps to their bare ass cheeks, and pump your shaft to coat their red ass cheeks, crack, and butt hole in hot, thick cum.",
   },
   {
     id: "final-100",
