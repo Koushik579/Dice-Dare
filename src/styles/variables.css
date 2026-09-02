@@ -1,0 +1,150 @@
+:root {
+  /* =========================
+     Colors
+     ========================= */
+
+  --color-background: #090204;
+  --color-background-soft: #180609;
+  --color-surface: rgba(155, 18, 45, 0.14);
+  --color-surface-strong: rgba(202, 27, 57, 0.22);
+
+  --color-white: #fff7f3;
+  --color-text: #fff3ee;
+  --color-text-soft: #e9bdc1;
+  --color-text-muted: #b47b83;
+  --color-text-faint: #79535a;
+
+  --color-border: rgba(255, 82, 107, 0.18);
+  --color-border-soft: rgba(255, 82, 107, 0.1);
+  --color-border-strong: rgba(255, 112, 133, 0.3);
+
+  /* Player colors */
+
+  --color-player1: #f23b59;
+  --color-player1-light: #ff6079;
+  --color-player1-dark: #a90d28;
+
+  --color-player2: #b71837;
+  --color-player2-light: #df3755;
+  --color-player2-dark: #650615;
+
+  /* Challenge colors */
+
+  --color-foreplay: #ff4966;
+  --color-oral: #c9183b;
+  --color-final: #ff8157;
+
+  --color-success: #f06a5d;
+  --color-danger: #ff4564;
+
+  /* =========================
+     Typography
+     ========================= */
+
+  --font-family:
+    "Avenir Next",
+    "Segoe UI",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  --font-family-display:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  --font-size-xs: 9px;
+  --font-size-sm: 11px;
+  --font-size-md: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 48px;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 650;
+  --font-weight-bold: 750;
+  --font-weight-extrabold: 800;
+
+  /* =========================
+     Spacing
+     ========================= */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 40px;
+  --space-10: 48px;
+  --space-11: 56px;
+  --space-12: 64px;
+
+  /* =========================
+     Border radius
+     ========================= */
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-pill: 999px;
+
+  /* =========================
+     Shadows
+     ========================= */
+
+  --shadow-sm:
+    0 4px 14px rgba(0, 0, 0, 0.12);
+
+  --shadow-md:
+    0 10px 30px rgba(0, 0, 0, 0.16);
+
+  --shadow-lg:
+    0 20px 55px rgba(0, 0, 0, 0.24);
+
+  --shadow-xl:
+    0 30px 80px rgba(0, 0, 0, 0.4);
+
+  /* =========================
+     Layout
+     ========================= */
+
+  --content-max-width: 1280px;
+  --game-max-width: 1180px;
+
+  --page-padding: 20px;
+  --mobile-page-padding: 14px;
+
+  /* =========================
+     Animation
+     ========================= */
+
+  --transition-fast: 140ms ease;
+  --transition-normal: 180ms ease;
+  --transition-slow: 300ms ease;
+
+  --ease-out:
+    cubic-bezier(0.2, 0.8, 0.3, 1);
+
+  --ease-smooth:
+    cubic-bezier(0.2, 0.9, 0.3, 1);
+
+  /* =========================
+     Z-index
+     ========================= */
+
+  --z-base: 1;
+  --z-content: 10;
+  --z-piece: 20;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  --z-toast: 1100;
+}

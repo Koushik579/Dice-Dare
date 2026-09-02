@@ -1,0 +1,244 @@
+.challenge-card {
+  --challenge-accent: #ff6fa8;
+  --challenge-accent-soft: rgba(255, 111, 168, 0.12);
+
+  position: relative;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 24px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      var(--challenge-accent-soft),
+      transparent 32%
+    ),
+    rgba(255, 255, 255, 0.035);
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.challenge-card--foreplay {
+  --challenge-accent: #ff6fa8;
+  --challenge-accent-soft: rgba(255, 111, 168, 0.13);
+}
+
+.challenge-card--oral {
+  --challenge-accent: #8f82ff;
+  --challenge-accent-soft: rgba(143, 130, 255, 0.13);
+}
+
+.challenge-card--final {
+  --challenge-accent: #ffcf72;
+  --challenge-accent-soft: rgba(255, 207, 114, 0.14);
+}
+
+/* Decorative glow */
+
+.challenge-card::before {
+  content: "";
+
+  position: absolute;
+  top: -80px;
+  right: -70px;
+
+  width: 190px;
+  height: 190px;
+
+  border-radius: 50%;
+
+  background: var(--challenge-accent);
+  opacity: 0.055;
+
+  filter: blur(35px);
+
+  pointer-events: none;
+}
+
+/* Header */
+
+.challenge-card__top {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.challenge-card__category {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: var(--challenge-accent);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.challenge-card__category-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+
+  border-radius: 50%;
+
+  background: var(--challenge-accent);
+
+  box-shadow:
+    0 0 10px
+      color-mix(
+        in srgb,
+        var(--challenge-accent) 55%,
+        transparent
+      );
+}
+
+.challenge-card__number {
+  color: rgba(255, 255, 255, 0.3);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Main content */
+
+.challenge-card__content {
+  position: relative;
+  z-index: 1;
+
+  padding: 42px 8px 34px;
+}
+
+.challenge-card__eyebrow {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: rgba(255, 255, 255, 0.38);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.challenge-card__title {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.95);
+
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.challenge-card__text {
+  margin: 16px 0 0;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.7;
+}
+
+/* Footer decoration */
+
+.challenge-card__footer {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.challenge-card__footer-line {
+  height: 1px;
+  flex: 1;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.challenge-card__footer-symbol {
+  color: var(--challenge-accent);
+
+  font-size: 12px;
+
+  opacity: 0.7;
+}
+
+/* Final challenge */
+
+.challenge-card--final {
+  border-color: rgba(255, 207, 114, 0.18);
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 207, 114, 0.1),
+      transparent 42%
+    ),
+    rgba(255, 255, 255, 0.035);
+}
+
+.challenge-card--final .challenge-card__title {
+  font-size: clamp(25px, 5vw, 36px);
+}
+
+.challenge-card--final .challenge-card__text {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .challenge-card {
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .challenge-card__content {
+    padding: 32px 4px 28px;
+  }
+
+  .challenge-card__text {
+    margin-top: 13px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .challenge-card__category {
+    font-size: 9px;
+  }
+
+  .challenge-card__number {
+    font-size: 9px;
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .challenge-card::before {
+    filter: none;
+  }
+}

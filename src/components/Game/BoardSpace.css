@@ -1,0 +1,387 @@
+.board-space {
+  --space-border: rgba(255, 255, 255, 0.1);
+  --space-background: rgba(255, 255, 255, 0.035);
+  --space-text: rgba(255, 255, 255, 0.86);
+  --space-muted: rgba(255, 255, 255, 0.38);
+
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--space-border);
+  border-radius: 14px;
+
+  background: var(--space-background);
+  color: var(--space-text);
+
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* =========================
+   Space content
+   ========================= */
+
+.board-space__number {
+  position: relative;
+  z-index: 3;
+
+  font-size: clamp(16px, 2.2vw, 25px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.board-space__label {
+  position: relative;
+  z-index: 3;
+
+  margin-top: 5px;
+
+  color: var(--space-muted);
+
+  font-size: clamp(7px, 1vw, 10px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+
+  text-transform: uppercase;
+}
+
+/* =========================
+   Category styles
+   ========================= */
+
+.board-space--foreplay {
+  --space-border: rgba(255, 111, 168, 0.18);
+  --space-background: rgba(255, 111, 168, 0.055);
+}
+
+.board-space--oral {
+  --space-border: rgba(143, 130, 255, 0.18);
+  --space-background: rgba(143, 130, 255, 0.055);
+}
+
+.board-space--final {
+  --space-border: rgba(255, 207, 114, 0.3);
+  --space-background: rgba(255, 207, 114, 0.08);
+
+  isolation: isolate;
+}
+
+.board-space--final .board-space__number {
+  font-size: clamp(20px, 3vw, 32px);
+}
+
+.board-space--final .board-space__label {
+  color: rgba(255, 207, 114, 0.72);
+}
+
+/* =========================
+   Current player space
+   ========================= */
+
+.board-space--current {
+  border-color: rgba(255, 255, 255, 0.28);
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.055),
+      transparent 70%
+    );
+
+  transform: translateY(-2px);
+}
+
+/* =========================
+   Landing effect
+   ========================= */
+
+.board-space__landing-effect {
+  position: absolute;
+  z-index: 1;
+
+  top: 50%;
+  left: 50%;
+
+  width: 40%;
+  aspect-ratio: 1;
+
+  border: 2px solid
+    rgba(255, 255, 255, 0.7);
+
+  border-radius: 50%;
+
+  transform:
+    translate(-50%, -50%)
+    scale(0.2);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  animation:
+    board-space-landing-ring
+    700ms
+    ease-out
+    forwards;
+}
+
+.board-space__landing-ring {
+  position: absolute;
+  z-index: 1;
+
+  top: 50%;
+  left: 50%;
+
+  width: 65%;
+  aspect-ratio: 1;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.32);
+
+  border-radius: 50%;
+
+  transform:
+    translate(-50%, -50%)
+    scale(0.3);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  animation:
+    board-space-landing-ring
+    900ms
+    100ms
+    ease-out
+    forwards;
+}
+
+.board-space--landing {
+  animation:
+    board-space-bounce
+    500ms
+    ease-out;
+}
+
+.board-space--landing::before {
+  content: "";
+
+  position: absolute;
+  z-index: 0;
+
+  top: 50%;
+  left: 50%;
+
+  width: 70%;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  transform:
+    translate(-50%, -50%)
+    scale(0.7);
+
+  opacity: 0;
+
+  animation:
+    board-space-landing-glow
+    600ms
+    ease-out
+    forwards;
+
+  pointer-events: none;
+}
+
+.board-space--landing::after {
+  content: "";
+
+  position: absolute;
+  z-index: 0;
+
+  top: 50%;
+  left: 50%;
+
+  width: 35%;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  transform:
+    translate(-50%, -50%)
+    scale(0.4);
+
+  opacity: 0;
+
+  animation:
+    board-space-landing-core
+    450ms
+    ease-out
+    forwards;
+
+  pointer-events: none;
+}
+
+/* Final landing */
+
+.board-space--final.board-space--landing {
+  animation:
+    board-space-final-pulse 900ms ease-out,
+    board-space-bounce 500ms ease-out;
+}
+
+.board-space--final.board-space--landing
+  .board-space__landing-effect {
+  border-color: rgba(255, 207, 114, 0.8);
+}
+
+.board-space--final.board-space--landing
+  .board-space__landing-ring {
+  border-color: rgba(255, 207, 114, 0.45);
+}
+
+/* =========================
+   Animations
+   ========================= */
+
+@keyframes board-space-bounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  35% {
+    transform: translateY(-5px) scale(1.035);
+  }
+
+  65% {
+    transform: translateY(1px) scale(0.99);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes board-space-landing-ring {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      scale(0.2);
+
+    opacity: 0.85;
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(2.3);
+
+    opacity: 0;
+  }
+}
+
+@keyframes board-space-landing-glow {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      scale(0.45);
+
+    opacity: 0.7;
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.25);
+
+    opacity: 0;
+  }
+}
+
+@keyframes board-space-landing-core {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      scale(0.25);
+
+    opacity: 0.8;
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.1);
+
+    opacity: 0;
+  }
+}
+
+@keyframes board-space-final-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0
+      rgba(255, 207, 114, 0.4);
+  }
+
+  45% {
+    box-shadow:
+      0 0 0 12px
+      rgba(255, 207, 114, 0.09);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 30px
+      rgba(255, 207, 114, 0);
+  }
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 600px) {
+  .board-space {
+    border-radius: 10px;
+  }
+
+  .board-space__label {
+    margin-top: 3px;
+  }
+}
+
+/* =========================
+   Reduced motion
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .board-space,
+  .board-space--landing,
+  .board-space__landing-effect,
+  .board-space__landing-ring,
+  .board-space--landing::before,
+  .board-space--landing::after {
+    animation: none;
+    transition: none;
+  }
+}

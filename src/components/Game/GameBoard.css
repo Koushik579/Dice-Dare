@@ -1,0 +1,693 @@
+.game-board {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ==================================================
+   HEADER
+================================================== */
+
+.game-board__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 12px;
+}
+
+.game-board__legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+
+  border-radius: 50%;
+}
+
+.legend-item--foreplay .legend-dot {
+  background: var(--color-foreplay);
+
+  box-shadow:
+    0 0 8px
+    rgba(255, 111, 168, 0.38);
+}
+
+.legend-item--oral .legend-dot {
+  background: var(--color-oral);
+
+  box-shadow:
+    0 0 8px
+    rgba(143, 130, 255, 0.38);
+}
+
+.legend-item--final .legend-dot {
+  background: var(--color-final);
+
+  box-shadow:
+    0 0 8px
+    rgba(255, 207, 114, 0.38);
+}
+
+.game-board__progress {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+
+  flex-shrink: 0;
+
+  color: rgba(255, 255, 255, 0.25);
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.game-board__progress > span:first-child {
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.progress-divider {
+  opacity: 0.45;
+}
+
+/* ==================================================
+   MAIN TRACK
+================================================== */
+
+.game-board__track {
+  position: relative;
+
+  width: 100%;
+  max-width: 760px;
+
+  /*
+    The extra height gives START before space 1 and
+    FINAL after space 36 their own positions.
+  */
+  aspect-ratio: 1 / 1.3;
+
+  margin: 0 auto;
+
+  min-height: 0;
+}
+
+/* ==================================================
+   6 × 6 BOARD
+================================================== */
+
+.game-board__spaces {
+  position: absolute;
+
+  /*
+    Leave room above space 1 for START and below
+    space 36 for FINAL.
+  */
+  left: 3%;
+  right: 3%;
+  top: 12%;
+  bottom: 12%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, minmax(0, 1fr));
+
+  grid-template-rows:
+    repeat(6, minmax(0, 1fr));
+
+  gap: clamp(5px, 1vw, 10px);
+}
+
+/* ==================================================
+   ZIG-ZAG PATH
+
+   1 → 2 → 3 → 4 → 5 → 6
+   12 ← 11 ← 10 ← 9 ← 8 ← 7
+   13 → 14 → 15 → 16 → 17 → 18
+   24 ← 23 ← 22 ← 21 ← 20 ← 19
+   25 → 26 → 27 → 28 → 29 → 30
+   36 ← 35 ← 34 ← 33 ← 32 ← 31
+================================================== */
+
+/*
+   Row 1:
+   1  2  3  4  5  6
+*/
+.game-board__space-wrapper:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.game-board__space-wrapper:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.game-board__space-wrapper:nth-child(3) {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.game-board__space-wrapper:nth-child(4) {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.game-board__space-wrapper:nth-child(5) {
+  grid-column: 5;
+  grid-row: 1;
+}
+
+.game-board__space-wrapper:nth-child(6) {
+  grid-column: 6;
+  grid-row: 1;
+}
+
+/*
+   Row 2:
+   12 11 10 9 8 7
+*/
+.game-board__space-wrapper:nth-child(7) {
+  grid-column: 6;
+  grid-row: 2;
+}
+
+.game-board__space-wrapper:nth-child(8) {
+  grid-column: 5;
+  grid-row: 2;
+}
+
+.game-board__space-wrapper:nth-child(9) {
+  grid-column: 4;
+  grid-row: 2;
+}
+
+.game-board__space-wrapper:nth-child(10) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.game-board__space-wrapper:nth-child(11) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.game-board__space-wrapper:nth-child(12) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/*
+   Row 3:
+   13 14 15 16 17 18
+*/
+.game-board__space-wrapper:nth-child(13) {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.game-board__space-wrapper:nth-child(14) {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.game-board__space-wrapper:nth-child(15) {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+.game-board__space-wrapper:nth-child(16) {
+  grid-column: 4;
+  grid-row: 3;
+}
+
+.game-board__space-wrapper:nth-child(17) {
+  grid-column: 5;
+  grid-row: 3;
+}
+
+.game-board__space-wrapper:nth-child(18) {
+  grid-column: 6;
+  grid-row: 3;
+}
+
+/*
+   Row 4:
+   24 23 22 21 20 19
+*/
+.game-board__space-wrapper:nth-child(19) {
+  grid-column: 6;
+  grid-row: 4;
+}
+
+.game-board__space-wrapper:nth-child(20) {
+  grid-column: 5;
+  grid-row: 4;
+}
+
+.game-board__space-wrapper:nth-child(21) {
+  grid-column: 4;
+  grid-row: 4;
+}
+
+.game-board__space-wrapper:nth-child(22) {
+  grid-column: 3;
+  grid-row: 4;
+}
+
+.game-board__space-wrapper:nth-child(23) {
+  grid-column: 2;
+  grid-row: 4;
+}
+
+.game-board__space-wrapper:nth-child(24) {
+  grid-column: 1;
+  grid-row: 4;
+}
+
+/*
+   Row 5:
+   25 26 27 28 29 30
+*/
+.game-board__space-wrapper:nth-child(25) {
+  grid-column: 1;
+  grid-row: 5;
+}
+
+.game-board__space-wrapper:nth-child(26) {
+  grid-column: 2;
+  grid-row: 5;
+}
+
+.game-board__space-wrapper:nth-child(27) {
+  grid-column: 3;
+  grid-row: 5;
+}
+
+.game-board__space-wrapper:nth-child(28) {
+  grid-column: 4;
+  grid-row: 5;
+}
+
+.game-board__space-wrapper:nth-child(29) {
+  grid-column: 5;
+  grid-row: 5;
+}
+
+.game-board__space-wrapper:nth-child(30) {
+  grid-column: 6;
+  grid-row: 5;
+}
+
+/*
+   Row 6:
+   36 35 34 33 32 31
+*/
+.game-board__space-wrapper:nth-child(31) {
+  grid-column: 6;
+  grid-row: 6;
+}
+
+.game-board__space-wrapper:nth-child(32) {
+  grid-column: 5;
+  grid-row: 6;
+}
+
+.game-board__space-wrapper:nth-child(33) {
+  grid-column: 4;
+  grid-row: 6;
+}
+
+.game-board__space-wrapper:nth-child(34) {
+  grid-column: 3;
+  grid-row: 6;
+}
+
+.game-board__space-wrapper:nth-child(35) {
+  grid-column: 2;
+  grid-row: 6;
+}
+
+.game-board__space-wrapper:nth-child(36) {
+  grid-column: 1;
+  grid-row: 6;
+}
+
+/* ==================================================
+   START
+================================================== */
+
+.game-board__start {
+  position: absolute;
+
+  left: 3%;
+  top: 0;
+
+  width: calc(
+    (94% - (5 * clamp(5px, 1vw, 10px))) / 6
+  );
+
+  height: auto;
+
+  aspect-ratio: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  pointer-events: none;
+}
+
+.game-board__start-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+
+  color: rgba(255, 255, 255, 0.32);
+
+  font-size: clamp(6px, 0.75vw, 9px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.game-board__start-arrow {
+  margin-top: 3px;
+
+  color: rgba(255, 255, 255, 0.25);
+
+  font-size: clamp(10px, 1.1vw, 14px);
+  line-height: 1;
+}
+
+.game-board__start-players {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translate(-50%, -50%);
+}
+
+.game-board__start-player {
+  width: clamp(24px, 3vw, 38px);
+  height: clamp(24px, 3vw, 38px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  font-size: clamp(9px, 1vw, 12px);
+  font-weight: 800;
+
+  box-shadow:
+    0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+.game-board__start-player
+  + .game-board__start-player {
+  margin-left: -7px;
+}
+
+.game-board__start-player--player1 {
+  background:
+    linear-gradient(
+      145deg,
+      var(--color-player1-light),
+      var(--color-player1-dark)
+    );
+}
+
+.game-board__start-player--player2 {
+  background:
+    linear-gradient(
+      145deg,
+      var(--color-player2-light),
+      var(--color-player2-dark)
+    );
+}
+
+/* ==================================================
+   FINAL
+================================================== */
+
+.game-board__final {
+  position: absolute;
+
+  left: 3%;
+  bottom: 0;
+
+  width: calc(
+    (94% - (5 * clamp(5px, 1vw, 10px))) / 6
+  );
+
+  height: auto;
+
+  aspect-ratio: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.game-board__final .board-space {
+  width: 100%;
+  height: 100%;
+}
+
+/* ==================================================
+   PLAYER PIECES
+================================================== */
+
+.game-board__pieces {
+  position: absolute;
+  inset: 0;
+
+  z-index: var(--z-piece);
+
+  pointer-events: none;
+}
+
+.game-board__piece-wrapper {
+  position: absolute;
+
+  width: 0;
+  height: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translate(-50%, -50%);
+
+  transition:
+    left var(--transition-normal),
+    top var(--transition-normal);
+
+  will-change: left, top;
+}
+
+/*
+   Give the piece layer a little extra room so
+   the pieces don't get clipped by board edges.
+*/
+.game-board__pieces .player-piece {
+  position: relative;
+  z-index: var(--z-piece);
+}
+
+/* ==================================================
+   DESKTOP
+================================================== */
+
+@media (min-width: 851px) {
+  .game-board__track {
+    max-height: min(
+      66vh,
+      760px
+    );
+  }
+}
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 850px) {
+  .game-board__header {
+    margin-bottom: 10px;
+  }
+
+  .game-board__track {
+    max-width: 680px;
+    aspect-ratio: 1 / 1.3;
+  }
+
+  .game-board__spaces {
+    gap: 5px;
+  }
+
+  .legend-item {
+    font-size: 7px;
+  }
+}
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+  .game-board__header {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .game-board__legend {
+    gap: 6px 9px;
+  }
+
+  .legend-item {
+    gap: 4px;
+
+    font-size: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .legend-dot {
+    width: 5px;
+    height: 5px;
+    flex-basis: 5px;
+  }
+
+  .game-board__progress {
+    font-size: 7px;
+  }
+
+  .game-board__progress > span:first-child {
+    font-size: 13px;
+  }
+
+  .game-board__track {
+    width: 100%;
+    max-width: none;
+
+    aspect-ratio: 1 / 1.3;
+  }
+
+  .game-board__spaces {
+    left: 2%;
+    right: 2%;
+    top: 12%;
+    bottom: 12%;
+
+    gap: 4px;
+  }
+
+  .game-board__start {
+    left: 2%;
+
+    width: calc(
+      (96% - (5 * 4px)) / 6
+    );
+  }
+
+  .game-board__final {
+    left: 2%;
+
+    width: calc(
+      (96% - (5 * 4px)) / 6
+    );
+  }
+
+  .game-board__start-label {
+    font-size: 6px;
+  }
+
+  .game-board__start-arrow {
+    font-size: 10px;
+  }
+}
+
+/* ==================================================
+   VERY SMALL SCREENS
+================================================== */
+
+@media (max-width: 380px) {
+  .game-board__legend {
+    gap: 5px 7px;
+  }
+
+  .legend-item {
+    font-size: 5.5px;
+  }
+
+  .game-board__progress > span:first-child {
+    font-size: 12px;
+  }
+
+  .game-board__spaces {
+    gap: 3px;
+  }
+
+  .game-board__start {
+    width: calc(
+      (96% - (5 * 3px)) / 6
+    );
+  }
+
+  .game-board__final {
+    width: calc(
+      (96% - (5 * 3px)) / 6
+    );
+  }
+}
+
+/* ==================================================
+   ACCESSIBILITY
+================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .game-board__piece-wrapper {
+    transition: none;
+  }
+}
