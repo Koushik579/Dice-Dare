@@ -11,6 +11,22 @@ export const PLAYER_IDS = {
   TWO: "player2",
 };
 
+/*
+  Each player has a fixed role for the game.
+
+  PLAYER 1 = Male
+  PLAYER 2 = Female
+*/
+export const PLAYER_GENDERS = {
+  MALE: "male",
+  FEMALE: "female",
+};
+
+export const PLAYER_ROLES = {
+  [PLAYER_IDS.ONE]: PLAYER_GENDERS.MALE,
+  [PLAYER_IDS.TWO]: PLAYER_GENDERS.FEMALE,
+};
+
 export const GAME_PHASES = {
   START: "start",
   PLAYING: "playing",

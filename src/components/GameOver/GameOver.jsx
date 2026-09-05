@@ -1,4 +1,5 @@
 import Button from "../UI/Button";
+import Modal from "../UI/Modal";
 import "./GameOver.css";
 
 const GameOver = ({
@@ -10,16 +11,24 @@ const GameOver = ({
   }
 
   return (
-    <section
-      className="game-over"
-      aria-label="Game over"
+    <Modal
+      isOpen
+      onClose={onRestart}
+      closeOnOverlay={false}
+      closeOnEscape={false}
+      showCloseButton={false}
+      className="game-over-modal"
     >
-      <div className="game-over__glow" />
+      <section
+        className="game-over"
+        aria-label="Game over"
+      >
+        <div className="game-over__glow" />
 
-      <div className="game-over__content">
-        <div className="game-over__badge">
-          GAME COMPLETE
-        </div>
+        <div className="game-over__content">
+          <div className="game-over__badge">
+            GAME COMPLETE
+          </div>
 
         <div className="game-over__trophy">
           <span aria-hidden="true">★</span>
@@ -43,15 +52,16 @@ const GameOver = ({
           <strong>37</strong>
         </div>
 
-        <Button
-          variant="primary"
-          size="large"
-          onClick={onRestart}
-        >
-          Play Again
-        </Button>
-      </div>
-    </section>
+          <Button
+            variant="primary"
+            size="large"
+            onClick={onRestart}
+          >
+            Play Again
+          </Button>
+        </div>
+      </section>
+    </Modal>
   );
 };
 

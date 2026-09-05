@@ -1,19 +1,27 @@
 import { useState } from "react";
+
 import "./StartScreen.css";
 
 const StartScreen = ({ onStart }) => {
-  const [player1Name, setPlayer1Name] = useState("");
-  const [player2Name, setPlayer2Name] = useState("");
+  const [maleName, setMaleName] =
+    useState("");
+
+  const [femaleName, setFemaleName] =
+    useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const name1 = player1Name.trim() || "Player 1";
-    const name2 = player2Name.trim() || "Player 2";
+    const finalMaleName =
+      maleName.trim() || "Male Partner";
+
+    const finalFemaleName =
+      femaleName.trim() ||
+      "Female Partner";
 
     onStart({
-      player1Name: name1,
-      player2Name: name2,
+      maleName: finalMaleName,
+      femaleName: finalFemaleName,
     });
   };
 
@@ -29,8 +37,8 @@ const StartScreen = ({ onStart }) => {
         </h1>
 
         <p className="start-screen__subtitle">
-          Roll the dice. Move forward. Complete the challenge.
-          Reach the final first.
+          Roll the dice. Move forward. Complete
+          the challenge. Reach the final first.
         </p>
 
         <form
@@ -38,37 +46,49 @@ const StartScreen = ({ onStart }) => {
           onSubmit={handleSubmit}
         >
           <div className="start-screen__players">
-            <div className="player-input">
-              <label htmlFor="player1">
-                Player 1
+            {/* =================================
+                MALE PARTNER
+            ================================== */}
+
+            <div className="player-input player-input--male">
+              <label htmlFor="male-partner">
+                Male Partner
               </label>
 
               <input
-                id="player1"
+                id="male-partner"
                 type="text"
-                value={player1Name}
+                value={maleName}
                 onChange={(event) =>
-                  setPlayer1Name(event.target.value)
+                  setMaleName(
+                    event.target.value
+                  )
                 }
-                placeholder="Enter name"
+                placeholder="Enter his name"
                 maxLength={20}
                 autoComplete="off"
               />
             </div>
 
-            <div className="player-input">
-              <label htmlFor="player2">
-                Player 2
+            {/* =================================
+                FEMALE PARTNER
+            ================================== */}
+
+            <div className="player-input player-input--female">
+              <label htmlFor="female-partner">
+                Female Partner
               </label>
 
               <input
-                id="player2"
+                id="female-partner"
                 type="text"
-                value={player2Name}
+                value={femaleName}
                 onChange={(event) =>
-                  setPlayer2Name(event.target.value)
+                  setFemaleName(
+                    event.target.value
+                  )
                 }
-                placeholder="Enter name"
+                placeholder="Enter her name"
                 maxLength={20}
                 autoComplete="off"
               />

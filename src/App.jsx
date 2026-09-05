@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import StartScreen from "./components/StartScreen/StartScreen";
 import GameBoard from "./components/Game/GameBoard";
 import Dice from "./components/Dice/Dice";
@@ -9,42 +11,29 @@ import GameOver from "./components/GameOver/GameOver";
 
 import { useGame } from "./hooks/useGame";
 
-import { GAME_PHASES } from "./constants/game";
-import { getChallengeType } from "./utils/gameRules";
+import {
+  GAME_PHASES,
+  TURN_PHASES,
+} from "./constants/game";
 
-import { foreplayChallenges } from "./data/foreplay";
-import { oralChallenges } from "./data/oral";
+import { foreplayMaleChallenges } from "./data/foreplaymale";
+import { foreplayFemaleChallenges } from "./data/foreplayfemale";
+import { oralMaleChallenges } from "./data/oralmale";
+import { oralFemaleChallenges } from "./data/oralfemale";
 import { finalChallenges } from "./data/final";
 
 import "./App.css";
 
 const App = () => {
   const game = useGame({
-    foreplayChallenges,
-    oralChallenges,
+    foreplayMaleChallenges,
+    foreplayFemaleChallenges,
+
+    oralMaleChallenges,
+    oralFemaleChallenges,
+
     finalChallenges,
   });
-
-  const handleStart = ({
-    player1Name,
-    player2Name,
-  }) => {
-    game.startGame({
-      player1Name,
-      player2Name,
-    });
-  };
-
-  const handleRestart = () => {
-    game.restartGame();
-  };
-
-  const activeChallengeType =
-    game.activeChallenge && game.landingSpace
-      ? getChallengeType(
-          game.landingSpace
-        )
-      : null;
 
   const isStart =
     game.gamePhase === GAME_PHASES.START;
@@ -61,117 +50,200 @@ const App = () => {
   const isGameOver =
     game.gamePhase === GAME_PHASES.GAME_OVER;
 
+  const activeChallengeType =
+    game.activeChallenge?.type ||
+    (
+      game.landingSpace >= 19
+        ? "oral"
+        : "foreplay"
+    );
+
+  const currentPosition =
+    Number.isFinite(
+      Number(game.currentPlayerData?.position)
+    )
+      ? Number(
+          game.currentPlayerData.position
+        )
+      : 0;
+
+  const progressValue =
+    Math.min(
+      Math.max(currentPosition, 0),
+      37
+    );
+
+  const progress = useMemo(
+    () => ({
+      current: progressValue,
+      total: 37,
+    }),
+    [progressValue]
+  );
+
   /*
-    Start screen
+    -----------------------------------------------
+    START GAME
+    -----------------------------------------------
+  */
+
+  const handleStart = ({
+    maleName,
+    femaleName,
+  }) => {
+    game.startGame({
+      maleName,
+      femaleName,
+    });
+  };
+
+  /*
+    -----------------------------------------------
+    NORMAL CHALLENGE COMPLETE
+    -----------------------------------------------
+  */
+
+  const handleChallengeComplete = () => {
+    game.continueAfterChallenge();
+  };
+
+  /*
+    -----------------------------------------------
+    FINAL CHALLENGE COMPLETE
+    -----------------------------------------------
+  */
+
+  const handleFinalComplete = () => {
+    game.completeFinalChallenge();
+  };
+
+  /*
+    -----------------------------------------------
+    START SCREEN
+    -----------------------------------------------
   */
 
   if (isStart) {
     return (
-      <div className="app">
+      <main className="app">
         <StartScreen
           onStart={handleStart}
         />
-      </div>
+      </main>
     );
   }
 
   /*
-    Game over screen
-  */
-
-  if (isGameOver) {
-    return (
-      <div className="app">
-        <GameOver
-          winner={game.winner}
-          onRestart={handleRestart}
-        />
-      </div>
-    );
-  }
-
-  /*
-    Main game
+    -----------------------------------------------
+    GAME SCREEN
+    -----------------------------------------------
   */
 
   return (
-    <div className="app">
-      <main className="game-screen">
+    <main className="app">
+      <div className="game-screen">
+
+        {/* HEADER */}
+
         <header className="game-screen__header">
-          <div className="game-screen__brand">
-            <span
-              className="game-screen__brand-mark"
-              aria-hidden="true"
-            >
-              ✦
-            </span>
+          <div>
+            <div className="game-screen__eyebrow">
+              DICE & DARE
+            </div>
 
-            <div>
-              <span className="game-screen__brand-title">
-                Dice & Dare
-              </span>
+            <h1 className="game-screen__title">
+              The Game
+            </h1>
+          </div>
 
-              <span className="game-screen__brand-subtitle">
-                Two Player Game
-              </span>
+          <div className="game-screen__turn">
+            <TurnIndicator
+              currentPlayer={game.currentPlayer}
+              player1={game.players.player1}
+              player2={game.players.player2}
+              isRolling={game.isRolling}
+              isMoving={game.isMoving}
+            />
+          </div>
+        </header>
+
+        {/* PLAYER INFORMATION */}
+
+        <section
+          className="game-screen__players"
+          aria-label="Players"
+        >
+          <div
+            className={[
+              "game-player",
+              "game-player--male",
+              game.currentPlayer ===
+                game.players.player1.id
+                ? "game-player--active"
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <div className="game-player__avatar">
+              {game.players.player1.name
+                .charAt(0)
+                .toUpperCase()}
+            </div>
+
+            <div className="game-player__info">
+              <strong>
+                {game.players.player1.name}
+                {" "}
+                <span>
+                  Space {game.players.player1.position}
+                </span>
+              </strong>
             </div>
           </div>
 
           <div
-            className="game-screen__space-count"
-            aria-label={`Current player is on space ${
-              game.currentPlayerData?.position ?? 0
-            } of 37`}
+            className={[
+              "game-player",
+              "game-player--female",
+              game.currentPlayer ===
+                game.players.player2.id
+                ? "game-player--active"
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
           >
-            <span>SPACE</span>
+            <div className="game-player__avatar">
+              {game.players.player2.name
+                .charAt(0)
+                .toUpperCase()}
+            </div>
 
-            <strong>
-              {game.currentPlayerData
-                ?.position ?? 0}
-            </strong>
-
-            <span>/ 37</span>
-          </div>
-        </header>
-
-        <section
-          className="game-screen__players"
-          aria-label="Player information"
-        >
-          <TurnIndicator
-            currentPlayer={
-              game.currentPlayer
-            }
-            player1={
-              game.players.player1
-            }
-            player2={
-              game.players.player2
-            }
-            isRolling={
-              game.isRolling
-            }
-            isMoving={
-              game.isMoving
-            }
-          />
-
-          <div className="game-screen__progress">
-            <ProgressBar
-              value={
-                game.currentPlayerData
-                  ?.position ?? 0
-              }
-              max={37}
-              label={`${game.currentPlayerData?.name ?? "Player"} progress`}
-            />
+            <div className="game-player__info">
+              <strong>
+                {game.players.player2.name}
+                {" "}
+                <span>
+                  Space {game.players.player2.position}
+                </span>
+              </strong>
+            </div>
           </div>
         </section>
 
-        <section
-          className="game-screen__board-section"
-          aria-label="Game board"
-        >
+        {/* PROGRESS */}
+
+        <section className="game-screen__progress">
+          <ProgressBar
+            value={progress.current}
+            max={progress.total}
+          />
+        </section>
+
+        {/* BOARD */}
+
+        <section className="game-screen__board-section">
           <GameBoard
             players={game.players}
             currentPlayer={
@@ -192,61 +264,34 @@ const App = () => {
           />
         </section>
 
-        <section
-          className="game-screen__controls"
-          aria-label="Game controls"
-        >
-          <div className="game-screen__dice-area">
-            <Dice
-              value={game.diceValue}
-              isRolling={
-                game.isRolling
-              }
-              disabled={
-                !isPlaying ||
-                game.isMoving
-              }
-              onRoll={
-                game.handleRoll
-              }
-            />
-          </div>
+        {/* CONTROLS */}
 
-          <div
-            className="game-screen__turn-message"
-            aria-live="polite"
-          >
-            {game.isRolling && (
-              <span>
-                Rolling the dice...
-              </span>
-            )}
+        <section className="game-screen__controls">
+          <Dice
+            value={game.diceValue}
+            isRolling={game.isRolling}
+            onRoll={game.handleRoll}
+            disabled={
+              !isPlaying ||
+              game.turnPhase !==
+                TURN_PHASES.READY ||
+              game.isMoving
+            }
+          />
 
-            {!game.isRolling &&
-              game.isMoving && (
-                <span>
-                  {
-                    game.currentPlayerData
-                      ?.name
-                  }{" "}
-                  is moving...
-                </span>
-              )}
-
-            {!game.isRolling &&
-              !game.isMoving &&
-              isPlaying && (
-                <span>
-                  {
-                    game.currentPlayerData
-                      ?.name
-                  }{" "}
-                  — roll the dice
-                </span>
-              )}
-          </div>
+          <p className="game-screen__hint">
+            {game.isRolling
+              ? "Rolling..."
+              : game.isMoving
+                ? "Moving..."
+                : isPlaying
+                  ? `${game.currentPlayerData?.name}'s turn`
+                  : ""}
+          </p>
         </section>
-      </main>
+      </div>
+
+      {/* NORMAL CHALLENGE POPUP */}
 
       <ChallengeModal
         challenge={
@@ -257,14 +302,15 @@ const App = () => {
           "foreplay"
         }
         playerName={
-          game.currentPlayerData
-            ?.name
+          game.currentPlayerData?.name
         }
         isOpen={isChallenge}
         onComplete={
-          game.continueAfterChallenge
+          handleChallengeComplete
         }
       />
+
+      {/* FINAL CHALLENGE */}
 
       <FinalChallenge
         challenge={
@@ -272,15 +318,25 @@ const App = () => {
         }
         playerName={
           game.winner?.name ||
-          game.currentPlayerData
-            ?.name
+          game.currentPlayerData?.name
         }
         isOpen={isFinal}
         onComplete={
-          game.completeFinalChallenge
+          handleFinalComplete
         }
       />
-    </div>
+
+      {/* GAME OVER */}
+
+      {isGameOver && (
+        <GameOver
+          winner={game.winner}
+          onRestart={
+            game.restartGame
+          }
+        />
+      )}
+    </main>
   );
 };
 

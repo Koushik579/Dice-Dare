@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useRef,
   useState,
 } from "react";
 
@@ -9,16 +10,28 @@ import {
   selectFinalChallenge,
 } from "../utils/challengePicker";
 
+const EMPTY_POOL = {
+  male: {
+    foreplay: [],
+    oral: [],
+  },
+  female: {
+    foreplay: [],
+    oral: [],
+  },
+};
+
 export const useChallenge = ({
-  foreplayChallenges = [],
-  oralChallenges = [],
+  foreplayMaleChallenges = [],
+  foreplayFemaleChallenges = [],
+
+  oralMaleChallenges = [],
+  oralFemaleChallenges = [],
+
   finalChallenges = [],
 }) => {
   const [challengePool, setChallengePool] =
-    useState({
-      foreplay: [],
-      oral: [],
-    });
+    useState(EMPTY_POOL);
 
   const [activeChallenge, setActiveChallenge] =
     useState(null);
@@ -27,52 +40,78 @@ export const useChallenge = ({
     useState(null);
 
   /*
+    Keep a synchronous copy of the pool.
+
+    React state updates are asynchronous, so this
+    prevents the first dice roll from seeing an
+    empty challenge pool immediately after starting
+    the game.
+  */
+  const challengePoolRef =
+    useRef(EMPTY_POOL);
+
+  /*
     --------------------------------------------------
-    INITIALIZE CHALLENGES
+    INITIALIZE
     --------------------------------------------------
   */
 
   const initializeChallenges =
     useCallback(() => {
-      const pool =
-        createChallengePool(
-          foreplayChallenges,
-          oralChallenges
-        );
+      const newPool =
+        createChallengePool({
+          foreplayMaleChallenges,
+          foreplayFemaleChallenges,
 
-      setChallengePool(pool);
+          oralMaleChallenges,
+          oralFemaleChallenges,
+        });
+
+      challengePoolRef.current = newPool;
+
+      setChallengePool(newPool);
 
       setActiveChallenge(null);
       setFinalChallenge(null);
 
-      return pool;
+      return newPool;
     }, [
-      foreplayChallenges,
-      oralChallenges,
+      foreplayMaleChallenges,
+      foreplayFemaleChallenges,
+      oralMaleChallenges,
+      oralFemaleChallenges,
     ]);
 
   /*
     --------------------------------------------------
-    GET CHALLENGE FOR A SPACE
+    GET CHALLENGE
     --------------------------------------------------
   */
 
   const getChallenge =
     useCallback(
-      (space, poolOverride = null) => {
+      (space, gender, poolOverride = null) => {
         const pool =
-          poolOverride || challengePool;
+          poolOverride ||
+          challengePoolRef.current;
 
-        if (!pool) {
+        if (!pool || !gender) {
+          return null;
+        }
+
+        const genderPool =
+          pool[gender];
+
+        if (!genderPool) {
           return null;
         }
 
         return getChallengeForSpace(
           space,
-          pool
+          genderPool
         );
       },
-      [challengePool]
+      []
     );
 
   /*
@@ -83,40 +122,57 @@ export const useChallenge = ({
 
   const revealChallenge =
     useCallback(
-      (space, poolOverride = null) => {
+      (
+        space,
+        gender,
+        poolOverride = null
+      ) => {
         /*
           FINAL SPACE
 
-          The final challenge is selected only
-          when somebody reaches 37.
+          Space 37 does NOT use the normal
+          challenge pool.
+
+          Exactly one random challenge is
+          selected from final.js.
         */
         if (space === 37) {
-          const selectedFinalChallenge =
+          const selectedFinal =
             selectFinalChallenge(
               finalChallenges
             );
 
           setFinalChallenge(
-            selectedFinalChallenge
+            selectedFinal
           );
 
-          return selectedFinalChallenge;
+          return selectedFinal;
         }
 
         /*
-          Normal space.
+          Normal spaces require the player's
+          gender so we know which dataset to use.
         */
-        const challenge =
+        if (!gender) {
+          console.warn(
+            "Challenge selection requires a player gender."
+          );
+
+          return null;
+        }
+
+        const selectedChallenge =
           getChallenge(
             space,
+            gender,
             poolOverride
           );
 
         setActiveChallenge(
-          challenge
+          selectedChallenge
         );
 
-        return challenge;
+        return selectedChallenge;
       },
       [
         finalChallenges,
@@ -154,11 +210,10 @@ export const useChallenge = ({
 
   const resetChallenges =
     useCallback(() => {
-      setChallengePool({
-        foreplay: [],
-        oral: [],
-      });
+      challengePoolRef.current =
+        EMPTY_POOL;
 
+      setChallengePool(EMPTY_POOL);
       setActiveChallenge(null);
       setFinalChallenge(null);
     }, []);

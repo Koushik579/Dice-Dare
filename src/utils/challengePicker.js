@@ -3,9 +3,13 @@ import {
   randomItem,
 } from "./random";
 
+/*
+  Select a fixed number of unique challenges
+  from a source dataset.
+*/
 export const selectChallenges = (
   challenges,
-  count
+  count = 18
 ) => {
   if (
     !Array.isArray(challenges) ||
@@ -14,29 +18,15 @@ export const selectChallenges = (
     return [];
   }
 
-  const selected = [];
-
-  /*
-    Each board section needs one challenge for every
-    space. If there are fewer source challenges, shuffle
-    the list again before reusing entries so repeats are
-    still assigned randomly rather than in a fixed order.
-  */
-  while (selected.length < count) {
-    const remainingCount =
-      count - selected.length;
-
-    selected.push(
-      ...randomItems(
-        challenges,
-        Math.min(remainingCount, challenges.length)
-      )
-    );
-  }
-
-  return selected;
+  return randomItems(
+    challenges,
+    Math.min(count, challenges.length)
+  );
 };
 
+/*
+  Select exactly ONE final challenge.
+*/
 export const selectFinalChallenge = (
   challenges
 ) => {
@@ -50,10 +40,18 @@ export const selectFinalChallenge = (
   return randomItem(challenges);
 };
 
-export const createChallengePool = (
-  foreplayChallenges,
-  oralChallenges
-) => {
+/*
+  Create the complete challenge pool for
+  one gender.
+
+  The source data can contain 100–200+
+  challenges, but only 18 are selected
+  for each section for the current game.
+*/
+export const createGenderChallengePool = ({
+  foreplayChallenges = [],
+  oralChallenges = [],
+}) => {
   return {
     foreplay: selectChallenges(
       foreplayChallenges,
@@ -67,45 +65,96 @@ export const createChallengePool = (
   };
 };
 
+/*
+  Create all challenge pools for the game.
+*/
+export const createChallengePool = ({
+  foreplayMaleChallenges = [],
+  foreplayFemaleChallenges = [],
+  oralMaleChallenges = [],
+  oralFemaleChallenges = [],
+}) => {
+  return {
+    male:
+      createGenderChallengePool({
+        foreplayChallenges:
+          foreplayMaleChallenges,
+
+        oralChallenges:
+          oralMaleChallenges,
+      }),
+
+    female:
+      createGenderChallengePool({
+        foreplayChallenges:
+          foreplayFemaleChallenges,
+
+        oralChallenges:
+          oralFemaleChallenges,
+      }),
+  };
+};
+
+/*
+  Return the challenge assigned to a specific
+  board space.
+
+  1–18  → foreplay
+  19–36 → oral
+
+  The gender-specific pool is passed in by
+  useChallenge.
+*/
 export const getChallengeForSpace = (
   space,
-  challengePool
+  genderPool
 ) => {
-  if (!challengePool) {
+  if (
+    !genderPool ||
+    !Number.isInteger(space)
+  ) {
     return null;
   }
 
   /*
-    FOREPLAY: 1–18
+    FOREPLAY
+    Spaces 1–18
   */
-
   if (
     space >= 1 &&
     space <= 18
   ) {
-    const index = space - 1;
-    const challenges = challengePool.foreplay ?? [];
+    const challengeIndex =
+      space - 1;
 
-    return challenges.length > 0
-      ? challenges[index % challenges.length]
-      : null;
+    return (
+      genderPool.foreplay?.[
+        challengeIndex
+      ] ?? null
+    );
   }
 
   /*
-    ORAL: 19–36
+    ORAL
+    Spaces 19–36
   */
-
   if (
     space >= 19 &&
     space <= 36
   ) {
-    const index = space - 19;
-    const challenges = challengePool.oral ?? [];
+    const challengeIndex =
+      space - 19;
 
-    return challenges.length > 0
-      ? challenges[index % challenges.length]
-      : null;
+    return (
+      genderPool.oral?.[
+        challengeIndex
+      ] ?? null
+    );
   }
 
+  /*
+    Space 37 is intentionally excluded.
+    Final challenges are selected separately.
+  */
   return null;
 };
